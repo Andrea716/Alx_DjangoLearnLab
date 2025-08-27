@@ -1,4 +1,9 @@
-books = Book.objects.all()
-for b in books:
-    print(b.title, b.author, b.publication_year)
-# 1984 George Orwell 1949
+# Retrieve Operation
+
+```python
+from bookshelf.models import Book
+
+# Retrieve the book we just created
+book = Book.objects.get(title="1984")
+book
+# Expected output: <Book: 1984 by George Orwell (1949)>
