@@ -5,6 +5,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
 
 # Function-based view to list all books
 def list_books(request):
@@ -44,3 +46,26 @@ def login_view(request):
 # Logout view using built-in class-based view
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
+
+# Role check functions
+def is_admin(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+# Role-based views
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
